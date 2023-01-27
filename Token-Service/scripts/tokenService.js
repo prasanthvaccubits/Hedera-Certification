@@ -126,7 +126,6 @@ const mintAndTransfer = async () => {
 
   //Create the transfer transaction
   try {
-    const client = await getClient();
     const transaction = new TransferTransaction()
       .addNftTransfer(
         TokenId.fromString(tokenId),
@@ -137,10 +136,10 @@ const mintAndTransfer = async () => {
       .freezeWith(client);
 
     //Sign with the supply private key of the token
-    const signTx = await transaction.sign(ACCOUNT_1_PRIVATE_KEY);
+    const signTx = await transaction.sign(PrivateKey.fromString(ACCOUNT_1_PRIVATE_KEY));
 
     //Sign with the account 3 private key of the token
-    const signedTx = await signTx.sign(ACCOUNT_3_PRIVATE_KEY);
+    const signedTx = await signTx.sign(PrivateKey.fromString(ACCOUNT_3_PRIVATE_KEY));
 
     //Submit the transaction to a Hedera network
     const txResponse = await signedTx.execute(client);
@@ -161,6 +160,7 @@ const mintAndTransfer = async () => {
 };
 
 const queryBalance = async (user, tokenId) => {
+  const client = await getClient();
   //Create the query
   const balanceQuery = new AccountBalanceQuery().setAccountId(user);
 
